@@ -130,7 +130,7 @@ void MainGame::processInput()
 				fireMissiles(shipMissiles);
 				playAudio(missile, myCamera.getPos());
 				//delay(0.5f);
-				stopAudio(missile);
+				//stopAudio(missile);
 				
 				break;
 			case SDL_BUTTON_RIGHT:
@@ -172,7 +172,12 @@ void MainGame::processInput()
 				myCamera.MoveLeft(20.0f * deltaTime);
 				break;
 			case SDLK_z:
-				ship.transformPositions(glm::vec3(ship.getTM().GetPos()->x* deltaTime, ship.getTM().GetPos()->y, ship.getTM().GetPos()->z +0.2f),
+				ship.transformPositions(glm::vec3(ship.getTM().GetPos()->x, ship.getTM().GetPos()->y, ship.getTM().GetPos()->z +0.2f),
+					glm::vec3(ship.getTM().GetRot()->x, ship.getTM().GetRot()->y, ship.getTM().GetRot()->z),
+					glm::vec3(ship.getTM().GetScale()->x, ship.getTM().GetScale()->y, ship.getTM().GetScale()->z));
+				break;
+			case SDLK_x:
+				ship.transformPositions(glm::vec3(ship.getTM().GetPos()->x, ship.getTM().GetPos()->y, ship.getTM().GetPos()->z - 0.2f),
 					glm::vec3(ship.getTM().GetRot()->x, ship.getTM().GetRot()->y, ship.getTM().GetRot()->z),
 					glm::vec3(ship.getTM().GetScale()->x, ship.getTM().GetScale()->y, ship.getTM().GetScale()->z));
 				break;
@@ -331,11 +336,6 @@ void MainGame::fireMissiles(int i)
 	i += 1;
 	shipMissiles = i;
 
-	/**
-	* check for asteroid collision
-	* handle asteroid collision
-	*/
-	//missiles->setActive(false);
 }
 
 void MainGame::drawShip()
@@ -371,6 +371,8 @@ bool MainGame::collision(glm::vec3 m1Pos, float m1Rad, glm::vec3 m2Pos, float m2
 	if (distance * distance < (m1Rad + m2Rad))
 	{
 		cout << distance << '\n';
+		ship.transformPositions(glm::vec3(0.0, 0.0, -3.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.2, 0.2, 0.2));
+		myCamera.initCamera(glm::vec3(0, 0, -50), 70.0f, (float)_gameDisplay.getWidth() / _gameDisplay.getHeight(), 0.01f, 1000.0f);
 		return true;
 	}
 	else
